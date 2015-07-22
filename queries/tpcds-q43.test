@@ -1,0 +1,46 @@
+====
+---- QUERY: TPCDS-Q43
+select
+  s_store_name,
+  s_store_id,
+  sum(case when (d_day_name = 'Sunday') then ss_sales_price else null end) sun_sales,
+  sum(case when (d_day_name = 'Monday') then ss_sales_price else null end) mon_sales,
+  sum(case when (d_day_name = 'Tuesday') then ss_sales_price else null end) tue_sales,
+  sum(case when (d_day_name = 'Wednesday') then ss_sales_price else null end) wed_sales,
+  sum(case when (d_day_name = 'Thursday') then ss_sales_price else null end) thu_sales,
+  sum(case when (d_day_name = 'Friday') then ss_sales_price else null end) fri_sales,
+  sum(case when (d_day_name = 'Saturday') then ss_sales_price else null end) sat_sales
+from
+  date_dim,
+  store_sales,
+  store
+where
+  d_date_sk = ss_sold_date_sk
+  and s_store_sk = ss_store_sk
+  and s_gmt_offset = -5
+  and d_year = 1998
+  and ss_sold_date_sk between 2450816 and 2451179  -- partition key filter
+group by
+  s_store_name,
+  s_store_id
+order by
+  s_store_name,
+  s_store_id,
+  sun_sales,
+  mon_sales,
+  tue_sales,
+  wed_sales,
+  thu_sales,
+  fri_sales,
+  sat_sales
+limit 100;
+---- RESULTS
+'able','AAAAAAAACAAAAAAA',49349.00,11964.64,65415.32,19680.45,33027.48,9612.44,14204.50
+'ation','AAAAAAAAHAAAAAAA',52459.95,8478.66,57051.69,30679.71,36850.72,11021.47,22339.61
+'bar','AAAAAAAAKAAAAAAA',46457.96,12677.26,57016.02,22659.39,33249.57,10005.28,19184.53
+'eing','AAAAAAAAIAAAAAAA',47770.56,7641.25,61742.84,14919.78,31392.67,10563.21,19786.37
+'ese','AAAAAAAAEAAAAAAA',52691.35,12586.01,60284.60,26242.38,31787.43,11306.84,13454.25
+'ought','AAAAAAAABAAAAAAA',48803.23,9293.29,64635.79,26335.10,37458.69,12052.65,16420.69
+---- TYPES
+STRING, STRING, DECIMAL, DECIMAL, DECIMAL, DECIMAL, DECIMAL, DECIMAL, DECIMAL
+====

@@ -1,0 +1,109 @@
+====
+---- QUERY: TPCDS-Q19
+select
+  i_brand_id brand_id,
+  i_brand brand,
+  i_manufact_id,
+  i_manufact,
+  sum(ss_ext_sales_price) ext_price
+from
+  date_dim,
+  store_sales,
+  item,
+  customer,
+  customer_address,
+  store
+where
+  d_date_sk = ss_sold_date_sk
+  and ss_item_sk = i_item_sk
+  and i_manager_id = 7
+  and d_moy = 11
+  and d_year = 1999
+  and ss_customer_sk = c_customer_sk
+  and c_current_addr_sk = ca_address_sk
+  and substr(ca_zip, 1, 5) <> substr(s_zip, 1, 5)
+  and ss_store_sk = s_store_sk
+  and ss_sold_date_sk between 2451484 and 2451513
+group by
+  i_brand,
+  i_brand_id,
+  i_manufact_id,
+  i_manufact
+order by
+  ext_price desc,
+  i_brand,
+  i_brand_id,
+  i_manufact_id,
+  i_manufact
+limit 100;
+---- RESULTS
+6011008,'amalgbrand #8',84,'eseeing',NULL
+2002002,'importoimporto #2',242,'ableeseable',NULL
+9006005,'corpmaxi #5',839,'n stprieing',8147.20
+4003002,'exportiedu pack #2',207,'ationbarable',7984.70
+7006006,'corpbrand #6',878,'eingationeing',6619.12
+8013005,'exportimaxi #5',87,'ationeing',5974.64
+7016007,'corpnameless #7',288,'eingeingable',5847.84
+1003001,'exportiamalg #1',151,'oughtantiought',4869.72
+7004003,'edu packbrand #3',431,'oughtpriese',4859.86
+2002001,'importoimporto #1',723,'priableation',4701.00
+10002005,'importounivamalg #5',485,'antieingese',4197.48
+6008002,'namelesscorp #2',328,'eingablepri',4034.43
+2001001,'amalgimporto #1',233,'pripriable',3632.00
+6016006,'corpbrand #6',965,'anticallyn st',3468.63
+4001001,'amalgedu pack #1',167,'ationcallyought',3324.72
+10008003,'namelessunivamalg #3',453,'priantiese',3322.90
+1001002,'amalgamalg #2',268,'eingcallyable',3173.58
+7010003,'univnameless #3',203,'pribarable',3009.25
+5003001,'exportischolar #1',954,'eseantin st',2837.46
+8001001,'amalgnameless #1',329,'n stablepri',2431.00
+8004005,'edu packnameless #5',172,'ableationought',2282.65
+10005006,'scholarunivamalg #6',263,'pricallyable',2193.57
+5003002,'exportischolar #2',88,'eingeing',2162.40
+7012009,'importonameless #9',269,'n stcallyable',2032.55
+4001001,'amalgedu pack #1',284,'eseeingable',2008.54
+8005007,'scholarnameless #7',206,'callybarable',1948.66
+2004001,'edu packimporto #1',166,'callycallyought',1887.42
+3003001,'exportiexporti #1',550,'barantianti',1741.88
+7010007,'univnameless #7',873,'priationeing',1552.46
+2002002,'importoimporto #2',312,'ableoughtpri',1490.48
+8010009,'univmaxi #9',135,'antipriought',1394.81
+10008016,'namelessunivamalg #16',543,'prieseanti',1287.77
+3001001,'amalgexporti #1',18,'eingought',1280.16
+9011011,'amalgunivamalg #11',751,'oughtantiation',1258.60
+7002009,'importobrand #9',177,'ationationought',1183.84
+3003001,'exportiexporti #1',757,'ationantiation',1150.92
+7006007,'corpbrand #7',189,'n steingought',967.60
+5002001,'importoscholar #1',69,'n stcally',900.16
+9014011,'edu packunivamalg #11',15,'antiought',867.89
+5001001,'amalgscholar #1',125,'antiableought',784.52
+3002002,'importoexporti #2',52,'ableanti',714.42
+8005003,'scholarnameless #3',159,'n stantiought',648.94
+7009002,'maxibrand #2',233,'pripriable',642.72
+6004005,'edu packcorp #5',139,'n stpriought',589.60
+5004001,'edu packscholar #1',111,'oughtoughtought',497.30
+7014005,'edu packnameless #5',142,'ableeseought',469.80
+1003002,'exportiamalg #2',19,'n stought',435.83
+1002001,'importoamalg #1',876,'callyationeing',423.18
+5003001,'exportischolar #1',491,'oughtn stese',413.10
+4002001,'importoedu pack #1',534,'eseprianti',396.50
+2001001,'amalgimporto #1',685,'antieingcally',394.42
+5003001,'exportischolar #1',887,'ationeingeing',319.20
+4003001,'exportiedu pack #1',505,'antibaranti',257.57
+8006007,'corpnameless #7',602,'ablebarcally',257.14
+1001001,'amalgamalg #1',135,'antipriought',236.10
+5004001,'edu packscholar #1',158,'eingantiought',217.14
+4001001,'amalgedu pack #1',613,'prioughtcally',214.35
+3004002,'edu packexporti #2',83,'prieing',150.66
+1002001,'importoamalg #1',884,'eseeingeing',120.12
+5002002,'importoscholar #2',544,'eseeseanti',95.75
+2001001,'amalgimporto #1',129,'n stableought',92.70
+8007003,'brandnameless #3',309,'n stbarpri',79.83
+9015005,'scholarunivamalg #5',54,'eseanti',63.94
+1001001,'amalgamalg #1',180,'bareingought',31.78
+7010009,'univnameless #9',9,'n st',30.24
+5004002,'edu packscholar #2',306,'callybarpri',28.00
+6006003,'corpcorp #3',548,'eingeseanti',5.70
+---- TYPES
+INT, STRING, INT, STRING, DECIMAL
+====

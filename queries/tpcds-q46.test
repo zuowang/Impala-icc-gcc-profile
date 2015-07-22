@@ -1,0 +1,184 @@
+====
+---- QUERY: TPCDS-Q46
+select
+  c_last_name,
+  c_first_name,
+  ca_city,
+  bought_city,
+  ss_ticket_number,
+  amt,
+  profit
+from
+  (select
+    ss_ticket_number,
+    ss_customer_sk,
+    ca_city bought_city,
+    sum(ss_coupon_amt) amt,
+    sum(ss_net_profit) profit
+  from
+    store_sales,
+    date_dim,
+    store,
+    household_demographics,
+    customer_address
+  where
+    store_sales.ss_sold_date_sk = date_dim.d_date_sk
+    and store_sales.ss_store_sk = store.s_store_sk
+    and store_sales.ss_hdemo_sk = household_demographics.hd_demo_sk
+    and store_sales.ss_addr_sk = customer_address.ca_address_sk
+    and (household_demographics.hd_dep_count = 5
+      or household_demographics.hd_vehicle_count = 3)
+    and date_dim.d_dow in (6, 0)
+    and date_dim.d_year in (1999, 1999 + 1, 1999 + 2)
+    and store.s_city in ('Midway', 'Concord', 'Spring Hill', 'Brownsville', 'Greenville')
+    -- partition key filter
+    and ss_sold_date_sk in (2451181, 2451182, 2451188, 2451189, 2451195, 2451196, 2451202, 2451203, 2451209, 2451210, 2451216, 2451217, 
+                            2451223, 2451224, 2451230, 2451231, 2451237, 2451238, 2451244, 2451245, 2451251, 2451252, 2451258, 2451259, 
+                            2451265, 2451266, 2451272, 2451273, 2451279, 2451280, 2451286, 2451287, 2451293, 2451294, 2451300, 2451301, 
+                            2451307, 2451308, 2451314, 2451315, 2451321, 2451322, 2451328, 2451329, 2451335, 2451336, 2451342, 2451343, 
+                            2451349, 2451350, 2451356, 2451357, 2451363, 2451364, 2451370, 2451371, 2451377, 2451378, 2451384, 2451385, 
+                            2451391, 2451392, 2451398, 2451399, 2451405, 2451406, 2451412, 2451413, 2451419, 2451420, 2451426, 2451427, 
+                            2451433, 2451434, 2451440, 2451441, 2451447, 2451448, 2451454, 2451455, 2451461, 2451462, 2451468, 2451469, 
+                            2451475, 2451476, 2451482, 2451483, 2451489, 2451490, 2451496, 2451497, 2451503, 2451504, 2451510, 2451511, 
+                            2451517, 2451518, 2451524, 2451525, 2451531, 2451532, 2451538, 2451539, 2451545, 2451546, 2451552, 2451553, 
+                            2451559, 2451560, 2451566, 2451567, 2451573, 2451574, 2451580, 2451581, 2451587, 2451588, 2451594, 2451595, 
+                            2451601, 2451602, 2451608, 2451609, 2451615, 2451616, 2451622, 2451623, 2451629, 2451630, 2451636, 2451637, 
+                            2451643, 2451644, 2451650, 2451651, 2451657, 2451658, 2451664, 2451665, 2451671, 2451672, 2451678, 2451679, 
+                            2451685, 2451686, 2451692, 2451693, 2451699, 2451700, 2451706, 2451707, 2451713, 2451714, 2451720, 2451721, 
+                            2451727, 2451728, 2451734, 2451735, 2451741, 2451742, 2451748, 2451749, 2451755, 2451756, 2451762, 2451763, 
+                            2451769, 2451770, 2451776, 2451777, 2451783, 2451784, 2451790, 2451791, 2451797, 2451798, 2451804, 2451805, 
+                            2451811, 2451812, 2451818, 2451819, 2451825, 2451826, 2451832, 2451833, 2451839, 2451840, 2451846, 2451847, 
+                            2451853, 2451854, 2451860, 2451861, 2451867, 2451868, 2451874, 2451875, 2451881, 2451882, 2451888, 2451889, 
+                            2451895, 2451896, 2451902, 2451903, 2451909, 2451910, 2451916, 2451917, 2451923, 2451924, 2451930, 2451931, 
+                            2451937, 2451938, 2451944, 2451945, 2451951, 2451952, 2451958, 2451959, 2451965, 2451966, 2451972, 2451973, 
+                            2451979, 2451980, 2451986, 2451987, 2451993, 2451994, 2452000, 2452001, 2452007, 2452008, 2452014, 2452015, 
+                            2452021, 2452022, 2452028, 2452029, 2452035, 2452036, 2452042, 2452043, 2452049, 2452050, 2452056, 2452057, 
+                            2452063, 2452064, 2452070, 2452071, 2452077, 2452078, 2452084, 2452085, 2452091, 2452092, 2452098, 2452099, 
+                            2452105, 2452106, 2452112, 2452113, 2452119, 2452120, 2452126, 2452127, 2452133, 2452134, 2452140, 2452141, 
+                            2452147, 2452148, 2452154, 2452155, 2452161, 2452162, 2452168, 2452169, 2452175, 2452176, 2452182, 2452183, 
+                            2452189, 2452190, 2452196, 2452197, 2452203, 2452204, 2452210, 2452211, 2452217, 2452218, 2452224, 2452225, 
+                            2452231, 2452232, 2452238, 2452239, 2452245, 2452246, 2452252, 2452253, 2452259, 2452260, 2452266, 2452267, 
+                            2452273, 2452274)
+  group by
+    ss_ticket_number,
+    ss_customer_sk,
+    ss_addr_sk,
+    ca_city
+  ) dn,
+  customer,
+  customer_address current_addr
+where
+  ss_customer_sk = c_customer_sk
+  and customer.c_current_addr_sk = current_addr.ca_address_sk
+  and current_addr.ca_city <> bought_city
+order by
+  c_last_name,
+  c_first_name,
+  ca_city,
+  bought_city,
+  ss_ticket_number
+limit 100;
+---- RESULTS
+'','','','Bunker Hill',133136,4983.83,-11549.37
+'','','','Woodville',50899,8655.31,-10609.16
+'','','Centerville','Providence',62604,156.21,-13626.64
+'','','Clifton','White Oak',59712,2292.43,-16908.54
+'','','Crossroads','Unionville',58203,1393.55,-11986.88
+'','','Louisville','Lakeside',139327,3800.99,-10089.61
+'','','Oakwood','Woodville',111282,359.16,-15852.70
+'','','Pleasant Hill','Waterloo',156554,277.78,-3118.59
+'','','Pleasant Valley','Bunker Hill',18775,2344.98,-1692.61
+'','','Shiloh','Oakland',46266,1622.69,-10676.15
+'','','Shore Acres','Cedar Grove',115319,6113.17,-11527.49
+'','','Summit','Stringtown',11040,16067.32,-24193.00
+'','Andrew','Oak Ridge','Enterprise',5925,5897.86,-24034.31
+'','Ashley','Cedar Grove','Unionville',232883,3522.87,-15805.10
+'','Gary','Murray','Crystal',2581,564.43,-467.73
+'','George','Pleasant Grove','Shiloh',179953,3442.20,-15026.03
+'','Justin','Green Acres','Friendship',218888,36.82,-9620.22
+'','Kathleen','Little River','Woodlawn',189811,0.00,-10443.74
+'','Lakeesha','Clifton','Enterprise',218396,1423.91,-8880.27
+'','Ray','Five Forks','Woodbury',164665,1800.44,-5946.03
+'','Tabatha','Harmony','Greenfield',56102,3221.04,-11594.38
+'','Tyler','Pinecrest','Walnut Grove',122234,6583.23,-22140.99
+'Adams','Jacqueline','Gum Springs','Springdale',110641,4071.61,-23419.08
+'Aiello','Beth','Red Hill','Oak Ridge',116426,975.79,-8948.15
+'Allen','Earl','Marion','Lincoln',64277,11935.26,-12108.31
+'Allen','Eric','Star','West Liberty',144009,878.68,135.47
+'Alves','Sam','Mount Olive','Union Hill',129660,38.36,-12463.53
+'Anderson','John','Pleasant Hill','Salem',96731,1631.83,-11010.09
+'Anderson','William','Macedonia','Wilson',97877,387.57,-12078.04
+'Andrews','Everett','Macedonia','Shiloh',96502,1004.97,-3638.15
+'Ashmore','Karen','Cedar Grove','Sulphur Springs',35216,4129.51,-13824.93
+'Augustine','Sylvia','','Ferguson',239026,112.07,-11058.47
+'Austin','Georgia','Woodville','Jamestown',157167,3108.93,-1302.69
+'Ayala','Ann','Oakland','Frankfort',28361,0.00,-5902.62
+'Baker','Richard','Five Forks','Greenfield',110320,264.71,-5730.45
+'Baldridge','Victor','Siloam','Mount Pleasant',46121,5460.48,-21175.89
+'Ball','Evelyn','Spring Valley','Five Points',205355,273.94,-15671.16
+'Banks','Tiffany','Greenfield','Tanglewood',163607,0.00,-3432.89
+'Barnett','Stacie','Wilson','Greenfield',90549,1991.13,-13073.98
+'Barth','Nicole','Cedar','Oak Ridge',175769,268.78,-2179.10
+'Bass','Rosalie','Fairview','Springdale',88499,572.81,-528.38
+'Beard','Brian','Edgewood','White Oak',152373,2468.60,-11237.00
+'Bishop','Daisy','Lakeside','Sulphur Springs',131728,775.04,-13097.37
+'Bivins','Tracy','Union Hill','Bethel',218867,548.08,-7750.72
+'Booker','Corrine','Crossroads','Midway',169619,3286.17,-6067.53
+'Boudreau','Joseph','Red Oak','Friendship',174139,2343.11,-10164.83
+'Bowen','Ann','Spring Hill','Brownsville',43025,1410.63,-2604.28
+'Boyd','Greg','Arlington','Woodville',59295,2127.88,-8753.13
+'Boyer','Abby','Mount Pleasant','Stewart',129199,139.70,-3980.35
+'Bradley','Thomas','Greenfield','Lebanon',63539,8.91,-7548.69
+'Bradshaw','Rhonda','Union Hill','Forest Hills',175675,41.92,-12661.23
+'Braun','Sarah','Harmony','Highland Park',104345,4240.45,-6383.02
+'Brice','Jose','Oak Ridge','Five Points',117335,305.96,-11637.44
+'Briggs','Nathan','Wilson','Bloomingdale',52858,90.42,-5227.26
+'Brock','Allen','Liberty','Woodlawn',230289,133.36,-6088.19
+'Brooks','David','Hamilton','Brownsville',185597,699.59,-7221.99
+'Brown','Alfred','','Oak Hill',57190,1560.07,-16052.32
+'Brown','Cheryl','Jackson','Pleasant Hill',72269,794.26,-8431.77
+'Brown','Eddie','Harmony','Walnut Grove',174318,65.44,-12890.27
+'Brown','Martin','Mount Zion','Unionville',134030,0.00,-3140.24
+'Brown','Ronald','Cedar Grove','Deerfield',149812,45.75,-10436.23
+'Brown','Scott','Brownsville','Florence',152236,602.32,-2929.77
+'Brubaker','Russell','Rosewood','Five Points',24470,10045.43,-8561.03
+'Buck','Traci','Lakeview','Mechanicsburg',136261,608.57,-13695.30
+'Buckley','Linda','Riverside','Forest Hills',172509,1448.70,-11444.86
+'Bullard','Jason','Deerfield','Littleton',205526,9773.59,-13889.96
+'Bunn','Linda','Edgewood','Stringtown',92027,82.41,-4946.79
+'Burdick','Lewis','Lynn','Greenville',16444,2099.08,-3870.46
+'Burkhart','Hanna','Plainview','Shiloh',165655,1215.93,-14760.98
+'Bush','Samuel','New Hope','Mount Pleasant',142279,128.62,-4167.68
+'Butler','Eugene','Liberty','Crossroads',97955,25.74,-10790.20
+'Byrd','Elizabeth','Sleepy Hollow','Fairfield',224342,4824.27,-5421.49
+'Callahan','Delois','Brownsville','Providence',69902,1198.79,-5720.72
+'Campbell','Diane','Waterloo','Mount Olive',99261,0.00,-8538.40
+'Campbell','Ellen','Macedonia','Kingston',32082,0.00,-1155.34
+'Cardenas','Kevin','Fairfield','Pleasant Valley',10046,931.24,1126.28
+'Carmack','Francesca','Clinton','Oakwood',27967,8528.86,-22214.55
+'Carpenter','Douglas','Greenfield','Wilson',171407,1011.15,-1596.83
+'Carroll','Leon','Walnut Grove','Oak Ridge',211854,1721.50,-10222.65
+'Carter','Bonnie','Riverdale','Maple Grove',134966,4343.63,-17216.80
+'Carter','Johnny','Fairview','Union Hill',54872,2645.96,-18847.25
+'Carter','Leticia','Hamilton','Union Hill',189327,2149.88,-11896.18
+'Cary','Gary','Fairfield','Glenwood',30050,625.67,-1904.88
+'Castillo','Joseph','Mount Pleasant','Shady Grove',157459,918.21,-10050.74
+'Castillo','Kirk','Lakeview','Antioch',230673,908.38,-3299.94
+'Castillo','Steven','Midway','Mount Vernon',227163,2489.24,-11455.15
+'Chadwick','Serena','Mount Vernon','Newport',28003,3242.87,-9634.14
+'Chambers','Rosalia','Newtown','Bunker Hill',122828,3806.49,-10758.68
+'Chavez','','Sulphur Springs','Summit',149341,72.69,3105.11
+'Chavez','Christina','Stratford','Oak Ridge',113094,1342.44,-8445.37
+'Chester','Harriet','Unionville','Forest',104340,1290.81,-8642.99
+'Chin','Amado','Mount Zion','Glenwood',143471,3710.70,-10935.83
+'Christie','Ronald','Bridgeport','Woodville',168645,325.14,-6519.76
+'Clayton','Darrin','Brownsville','Midway',97011,9864.25,-10560.99
+'Clements','Stella','Bethel','Forest Hills',62395,1544.16,-3.32
+'Cloud','Jimmy','Spring Valley','Stringtown',180022,1700.78,-12476.49
+'Collins','Adolfo','Buena Vista','Fairview',96557,1457.91,-25595.81
+'Colvin','Angela','Fairview','Farmington',226567,842.08,-19485.16
+'Conklin','Florence','Riverside','Oakdale',160951,7125.31,-21542.41
+'Conn','Nicole','The Meadows','Harmony',146652,2200.25,-9231.72
+---- TYPES
+STRING, STRING, STRING, STRING, INT, DECIMAL, DECIMAL
+====
